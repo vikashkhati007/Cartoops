@@ -9,7 +9,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Cartoops is a ecommerce platform for buying and selling products",
-  description: "Cartoops is a ecommerce platform for buying and selling products",
+  description:
+    "Cartoops is a ecommerce platform for buying and selling products",
 };
 
 export default function RootLayout({
@@ -20,10 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <Providers>
-      <body className={inter.className} suppressHydrationWarning>
-        <Header/>
-        {children}
-        <Footer/>
+        <body className={inter.className} suppressHydrationWarning>
+          <Header />
+          {children}
+          <Footer />
         </body>
       </Providers>
     </html>

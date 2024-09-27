@@ -2,6 +2,7 @@ import EcommerceFeatures from "@/components/EcommerceFeatures";
 import FeaturedCategories from "@/components/FeaturedCategories";
 import Hero from "@/components/Hero";
 import SearchBar from "@/components/Searchbar";
+import TrendingProductsHero from "@/components/Trendingproducts";
 
 export default function HomePage() {
   return (
@@ -9,6 +10,7 @@ export default function HomePage() {
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 sm:pb-24 ">
         <Hero />
         <SearchBar />
+        <TrendingProductsHero/>
         <FeaturedCategories />
         <EcommerceFeatures />
       </main>
