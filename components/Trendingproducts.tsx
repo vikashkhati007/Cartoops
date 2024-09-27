@@ -73,12 +73,12 @@ export default function TrendingProductsHero() {
   }
 
   return (
-    <div className="bg-gradient-to-r from-blue-500 to-purple-600 py-12 overflow-hidden mb-10 rounded-md">
+    <div className="bg-gradient-to-r from-blue-500 to-purple-600 py-12 overflow-hidden mb-10 rounded-md ">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-white mb-8 text-center">Trending Products</h2>
         <div 
           ref={scrollRef}
-          className="flex overflow-x-hidden"
+          className="flex overflow-hidden"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
           {[...products, ...products].map((product, index) => (
