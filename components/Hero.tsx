@@ -13,7 +13,7 @@ export default function Hero() {
             Explore our curated collection of trendy and affordable fashion.
           </p>
           <Link
-            href="#featured-categories"
+            href="/products"
             className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 transition duration-150 ease-in-out"
           >
             Shop Now
