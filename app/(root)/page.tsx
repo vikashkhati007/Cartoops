@@ -11,8 +11,8 @@ export default function HomePage() {
         <Hero />
         <SearchBar />
         <TrendingProductsHero/>
-        <FeaturedCategories />
         <EcommerceFeatures />
+        <FeaturedCategories />
       </main>
     </div>
   )

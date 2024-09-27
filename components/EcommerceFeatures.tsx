@@ -9,7 +9,7 @@ const features = [
 
 export default function EcommerceFeatures() {
   return (
-    <section className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+    <section className="my-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
       {features.map((item, index) => (
         <div key={index} className="flex flex-col items-center">
           <item.icon className="h-10 w-10 text-indigo-600 mb-2" />
