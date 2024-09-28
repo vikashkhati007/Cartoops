@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Eye, EyeOff, User, Mail, Lock } from "lucide-react";
-import Image from "next/image";
+import { signIn } from "next-auth/react";
 
 export default function AuthForms() {
   const [isLogin, setIsLogin] = useState(true);
@@ -53,11 +53,35 @@ export default function AuthForms() {
     return isValid;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("Form submitted:", formData);
-      setFormData({ name: "", email: "", password: "" });
+      if (!isLogin) {
+        const res = await fetch(`/api/auth/register`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+        if (res.ok) {
+          setIsLogin(true);
+          setFormData({
+            email: "",
+            password: "",
+            name: "",
+          });
+        }
+      } else {
+        const res = await signIn("credentials", {
+          ...formData,
+          redirect: false,
+        });
+        console.log("Form submitted:", formData);
+        if (res) {
+          setFormData({ name: "", email: "", password: "" });
+        }
+      }
     }
   };
 
@@ -65,7 +89,9 @@ export default function AuthForms() {
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 flex flex-col justify-center py-6 sm:py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <span className="text-2xl font-bold text-indigo-600">{isLogin? "SignIn To Your Account": "Create Your Account"}</span>
+          <span className="text-2xl font-bold text-indigo-600">
+            {isLogin ? "SignIn To Your Account" : "Create Your Account"}
+          </span>
         </div>
       </div>
 

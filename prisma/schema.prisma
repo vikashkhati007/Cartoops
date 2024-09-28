@@ -12,3 +12,14 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId // Use ObjectId native type
+  name             String    @unique
+  email            String    @unique
+  password         String
+  profileImage     String    @default("") // Default empty string for profile image
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
