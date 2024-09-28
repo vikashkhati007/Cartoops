@@ -16,4 +16,4 @@ const customMiddleware = withAuth(
 
 export default customMiddleware;
 
-export const config = { matcher: ["/products", "/cart", "/products/:path*", "/favorite", "/api/:path*"] };
+export const config = { matcher: ["/products", "/cart", "/products/:path*", "/favorite", "/api/:path*", "/profile", "/setting"] };

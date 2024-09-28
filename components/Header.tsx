@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ShoppingCart, Heart, Menu, X, ChevronDown, User } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -131,6 +131,7 @@ export default function Header() {
                     </Link>
                     {session.data?.user ? (
                       <button
+                      onClick={() => signOut()}
                         className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150"
                         role="menuitem"
                       >
@@ -209,7 +210,9 @@ export default function Header() {
             </Link>
 
             {session.data?.user ? (
-              <button className="block w-full text-left py-2 text-gray-700 hover:text-blue-600 font-medium">
+              <button
+              onClick={() => signOut()}
+              className="block w-full text-left py-2 text-gray-700 hover:text-blue-600 font-medium">
                 Sign Out
               </button>
             ) : null}
