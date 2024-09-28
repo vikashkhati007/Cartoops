@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeOff, User, Mail, Lock } from "lucide-react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 export default function AuthForms() {
   const [isLogin, setIsLogin] = useState(true);
@@ -17,6 +17,18 @@ export default function AuthForms() {
     email: "",
     password: "",
   });
+
+  const session = useSession();
+
+  useEffect(()=>{
+    if(session.data){
+      if(session.data.user){
+        if(session.data.user.email){
+          window.location.href = "/products";
+        }
+      }
+    }
+  },[session.data])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -77,7 +89,6 @@ export default function AuthForms() {
           ...formData,
           redirect: false,
         });
-        console.log("Form submitted:", formData);
         if (res) {
           setFormData({ name: "", email: "", password: "" });
         }

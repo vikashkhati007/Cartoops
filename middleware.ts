@@ -4,12 +4,12 @@ import { withAuth } from "next-auth/middleware";
 const customMiddleware = withAuth(
   (req) => {
     if (!req.nextauth.token) {
-      return NextResponse.redirect("/auth/");
+      return NextResponse.redirect("/products");
     }
   },
   {
     pages: {
-      signIn: "/auth/",
+      signIn: "/products",
     },
   }
 );

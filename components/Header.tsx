@@ -1,107 +1,153 @@
 'use client'
 
-import { useState } from 'react'
-import { ShoppingBag, Menu, X, User, Heart, ChevronDown } from 'lucide-react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { ShoppingCart, Heart, Menu, X, ChevronDown, User } from 'lucide-react'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [categories, setCategories] = useState<string[]>([])
+  const [isProfileOpen, setIsProfileOpen] = useState(false)
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('https://fakestoreapi.com/products/categories')
+        if (!response.ok) {
+          throw new Error('Failed to fetch categories')
+        }
+        const data = await response.json()
+        setCategories(data)
+      } catch (error) {
+        console.error('Error fetching categories:', error)
+      }
+    }
+
+    fetchCategories()
+  }, [])
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4 md:justify-start md:space-x-10">
-          <div className="flex justify-start lg:w-0 lg:flex-1">
-            <Link href="/">
-              <span className="sr-only">Cartoops</span>
-              <span className="text-2xl font-bold text-indigo-600">Cartoops</span>
+    <header className="bg-white shadow-md">
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex justify-between items-center">
+          <Link href="/" className="text-2xl font-bold text-blue-600">
+            Cartoops
+          </Link>
+
+          <nav className="hidden md:flex space-x-6">
+            <Link href="/" className="text-gray-700 hover:text-blue-600 font-medium">
+              Home
             </Link>
-          </div>
-          <div className="-mr-2 -my-2 md:hidden">
-            <button
-              type="button"
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              <span className="sr-only">Open menu</span>
-              {isMenuOpen ? (
-                <X className="h-6 w-6" aria-hidden="true" />
-              ) : (
-                <Menu className="h-6 w-6" aria-hidden="true" />
-              )}
-            </button>
-          </div>
-          <nav className="hidden md:flex space-x-10">
-            {['Men', 'Women', 'Kids', 'Sale'].map((item) => (
-              <div key={item} className="relative group">
-                <button className="text-base font-medium text-gray-500 hover:text-gray-900 inline-flex items-center">
-                  {item}
-                  <ChevronDown className="ml-2 h-4 w-4" />
-                </button>
-                <div className="absolute z-10 -ml-4 mt-3 transform px-2 w-screen max-w-md sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2 hidden group-hover:block">
-                  <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
-                    <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
-                      <Link href="#" className="block p-3 rounded-md hover:bg-gray-50">
-                        Subcategory 1
-                      </Link>
-                      <Link href="#" className="block p-3 rounded-md hover:bg-gray-50">
-                        Subcategory 2
-                      </Link>
-                      <Link href="#" className="block p-3 rounded-md hover:bg-gray-50">
-                        Subcategory 3
-                      </Link>
-                    </div>
-                  </div>
+            <div className="relative group">
+              <button className="text-gray-700 hover:text-blue-600 font-medium flex items-center">
+                Categories
+                <ChevronDown className="ml-1 h-4 w-4" />
+              </button>
+              <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                  {categories.map((category) => (
+                    <Link
+                      key={category}
+                      href={`/products?category=${encodeURIComponent(category)}`}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150"
+                      role="menuitem"
+                    >
+                      {category}
+                    </Link>
+                  ))}
                 </div>
               </div>
-            ))}
+            </div>
+            <Link href="/products" className="text-gray-700 hover:text-blue-600 font-medium">
+              All Products
+            </Link>
           </nav>
-          <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
-            <Link href="#" className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
+
+          <div className="flex items-center space-x-6">
+            <Link href="/cart" className="text-gray-700 hover:text-blue-600">
+              <ShoppingCart className="h-6 w-6" />
+            </Link>
+            <Link href="/favorites" className="text-gray-700 hover:text-blue-600">
               <Heart className="h-6 w-6" />
             </Link>
-            <Link href="#" className="ml-8 whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
-              <User className="h-6 w-6" />
-            </Link>
-            <Link href="#" className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">
-              <ShoppingBag className="h-5 w-5 mr-2" />
-              Cart
-            </Link>
+            <div className="relative">
+              <button
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                className="text-gray-700 hover:text-blue-600 focus:outline-none"
+              >
+                <User className="h-6 w-6" />
+              </button>
+              {isProfileOpen && (
+                <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+                  <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                    <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150" role="menuitem">
+                      Your Profile
+                    </Link>
+                    <Link href="/orders" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150" role="menuitem">
+                      Your Orders
+                    </Link>
+                    <Link href="/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150" role="menuitem">
+                      Settings
+                    </Link>
+                    <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150" role="menuitem">
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+            <button
+              className="md:hidden text-gray-700 hover:text-blue-600"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
           </div>
         </div>
-      </div>
 
-      {/* Mobile menu */}
-      <div className={`${isMenuOpen ? 'block' : 'hidden'} md:hidden`}>
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          {['Men', 'Women', 'Kids', 'Sale'].map((item) => (
-            <Link key={item} href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-              {item}
+        {isMenuOpen && (
+          <div className="mt-4 md:hidden">
+            <Link href="/" className="block py-2 text-gray-700 hover:text-blue-600 font-medium">
+              Home
             </Link>
-          ))}
-        </div>
-        <div className="pt-4 pb-3 border-t border-gray-200">
-          <div className="flex items-center px-5">
-            <div className="flex-shrink-0">
-              <User className="h-10 w-10 rounded-full" />
+            <div className="py-2">
+              <button
+                className="text-gray-700 hover:text-blue-600 font-medium flex items-center"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Categories
+                <ChevronDown className="ml-1 h-4 w-4" />
+              </button>
+              <div className="pl-4 mt-2 space-y-2">
+                {categories.map((category) => (
+                  <Link
+                    key={category}
+                    href={`/products?category=${encodeURIComponent(category)}`}
+                    className="block text-sm text-gray-600 hover:text-blue-600 transition-colors duration-150"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {category}
+                  </Link>
+                ))}
+              </div>
             </div>
-            <div className="ml-3">
-              <div className="text-base font-medium text-gray-800">User Name</div>
-              <div className="text-sm font-medium text-gray-500">user@example.com</div>
-            </div>
-          </div>
-          <div className="mt-3 px-2 space-y-1">
-            <Link href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+            <Link href="/products" className="block py-2 text-gray-700 hover:text-blue-600 font-medium">
+              All Products
+            </Link>
+            <Link href="/profile" className="block py-2 text-gray-700 hover:text-blue-600 font-medium">
               Your Profile
             </Link>
-            <Link href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
+            <Link href="/orders" className="block py-2 text-gray-700 hover:text-blue-600 font-medium">
+              Your Orders
+            </Link>
+            <Link href="/settings" className="block py-2 text-gray-700 hover:text-blue-600 font-medium">
               Settings
             </Link>
-            <Link href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
-              Sign out
-            </Link>
+            <button className="block w-full text-left py-2 text-gray-700 hover:text-blue-600 font-medium">
+              Sign Out
+            </button>
           </div>
-        </div>
+        )}
       </div>
     </header>
   )
