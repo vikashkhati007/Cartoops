@@ -4,16 +4,16 @@ import { withAuth } from "next-auth/middleware";
 const customMiddleware = withAuth(
   (req) => {
     if (!req.nextauth.token) {
-      return NextResponse.redirect("/products");
+      return NextResponse.redirect("/auth");
     }
   },
   {
     pages: {
-      signIn: "/products",
+      signIn: "/auth",
     },
   }
 );
 
 export default customMiddleware;
 
-export const config = { matcher: ["/products", "/products/:path*", "/api/:path*"] };
+export const config = { matcher: ["/products", "/cart", "/products/:path*", "/favorite", "/api/:path*"] };
