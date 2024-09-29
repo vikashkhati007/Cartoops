@@ -32,14 +32,32 @@ export default function ShoppingCartPage() {
     fetchCartItems(session.data?.user.id);
   }, []);
 
-  const updateQuantity = (id: number, newQuantity: number) => {
+  const updateQuantity = async (id: number, newQuantity: number) => {
     if (newQuantity < 1) return;
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
+    const response = await fetch(`/api/cart`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        cartItemId: id,   // ID of the cart item to update
+        quantity: newQuantity,    // New quantity value
+      }),
+    });
+  
+    const data = await response.json();
+    if (response.ok) {
+      setCartItems((prevItems) =>
+        prevItems.map((item) =>
+          item.id === id ? { ...item, quantity: newQuantity } : item
+        )
+      );
+    } else {
+      console.error('Error updating cart item quantity:', data);
+    }
+   
   };
+
 
   const removeItem = async (id: number) => {
     const response = await fetch(`/api/cart?cartItemId=${id}`, {

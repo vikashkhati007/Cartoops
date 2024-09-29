@@ -158,6 +158,8 @@ useEffect(() => {
       console.error('Failed to add cart item:', data);
     }
   };
+
+  
   
 
   return (

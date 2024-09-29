@@ -92,3 +92,38 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ error: 'Error deleting cart item' }, { status: 500 });
   }
 }
+
+
+export async function PATCH(req: Request) {
+  try {
+    const body = await req.json();
+    const { cartItemId, quantity } = body;
+
+    if (!cartItemId || !quantity) {
+      return NextResponse.json(
+        { error: 'Cart item ID and quantity are required' },
+        { status: 400 }
+      );
+    }
+
+    // Update the quantity of the cart item
+    const updatedCartItem = await prisma.cartItems.update({
+      where: { id: cartItemId },
+      data: { quantity: quantity },
+    });
+
+    return NextResponse.json(
+      {
+        message: 'Cart item quantity updated successfully',
+        updatedCartItem,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('Error updating cart item quantity:', error);
+    return NextResponse.json(
+      { error: 'Error updating cart item quantity' },
+      { status: 500 }
+    );
+  }
+}
