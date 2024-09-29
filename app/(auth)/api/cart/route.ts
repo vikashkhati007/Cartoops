@@ -61,3 +61,34 @@ export async function POST(req: any) {
     }, { status: 500 });
   }
 }
+
+
+export async function DELETE(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const cartItemId = searchParams.get('cartItemId'); // Get cartItemId from query params
+
+    if (!cartItemId) {
+      return NextResponse.json({ error: 'Cart item ID is required' }, { status: 400 });
+    }
+
+    // Delete the cart item
+    const deletedCartItem = await prisma.cartItems.delete({
+      where: {
+        id: cartItemId,
+      },
+    });
+
+    // Return a success response
+    return NextResponse.json(
+      {
+        message: 'Cart item deleted successfully',
+        deletedCartItem,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('Error deleting cart item:', error);
+    return NextResponse.json({ error: 'Error deleting cart item' }, { status: 500 });
+  }
+}
