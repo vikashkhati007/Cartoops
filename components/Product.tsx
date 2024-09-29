@@ -319,6 +319,7 @@ export default function ProductPage() {
                     // @ts-ignore
                     onClick={() =>
                       addCartItem(
+                        //@ts-ignore
                         session.data?.user?.id,
                         product.id,
                         product.title,

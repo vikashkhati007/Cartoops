@@ -3,17 +3,19 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Heart, ShoppingCart, Trash2 } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 interface FavoriteProduct {
   id: number;
   title: string;
-  price: number;
   image: string;
+  price: number;
   category: string;
 }
 
 export default function FavoriteProductsPage() {
   const [favorites, setFavorites] = useState<FavoriteProduct[]>([]);
+  const session = useSession();
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -31,15 +33,39 @@ export default function FavoriteProductsPage() {
     fetchFavorites();
   }, []);
 
-  const removeFromFavorites = (id: number) => {
-    setFavorites((prevFavorites) =>
-      prevFavorites.filter((item) => item.id !== id)
-    );
+  const removeFromFavorites = async (id: number) => {
+    const res = await fetch(`/api/favorite?id=${id}`, {
+      method: 'DELETE',
+    });
+
+    if (res.ok) {
+      setFavorites((prevFavorites) =>
+        prevFavorites.filter((item) => item.id !== id)
+      );
+    }
   };
 
-  const addToCart = (product: FavoriteProduct) => {
+  const addToCart = async (productid:number, producttitle:string, productimage:string, productprice:number ) => {
     // Implement add to cart functionality here
-    console.log("Added to cart:", product);
+    const response = await fetch("/api/cart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        //@ts-ignore
+        userId: session.data?.user?.id!,
+        productId: productid,
+        title: producttitle,
+        price: productprice,
+        image: productimage,
+      }),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+    console.log("Added to cart:", data);
+    }
   };
 
   return (
@@ -92,7 +118,7 @@ export default function FavoriteProductsPage() {
                       ${product.price.toFixed(2)}
                     </span>
                     <button
-                      onClick={() => addToCart(product)}
+                      onClick={() => addToCart(product.id, product.title, product.image, product.price)}
                       className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-300 flex items-center"
                     >
                       <ShoppingCart className="h-5 w-5 mr-2" />

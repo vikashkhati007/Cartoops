@@ -54,8 +54,8 @@ export async function POST(req: Request) {
 
 export async function GET() {
   // Get session to ensure user is authenticated
+ 
   const session = await getSession();
-  console.log(session?.user?.email);
 
   // If user is not logged in, return unauthorized response
   if (!session) {
@@ -78,6 +78,55 @@ export async function GET() {
     return NextResponse.json({ favoriteItems: user.favoriteitems });
   } catch (error) {
     console.error('Error fetching favorite items:', error);
+    return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
+  }
+}
+
+
+export async function DELETE(req: Request) {
+  // Get session to ensure user is authenticated
+  const session = await getSession();
+
+  // If user is not logged in, return unauthorized response
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Get the URL and extract the 'id' from query params
+  const url = new URL(req.url);
+  const favoriteItemId = url.searchParams.get('id');
+
+  if (!favoriteItemId) {
+    return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+  }
+
+  try {
+    // Find the user by email from the session
+    const user = await prisma.user.findUnique({
+      where: { email: session.user?.email! }
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Find the favorite item by its ID and make sure it belongs to the user
+    const favoriteItem = await prisma.favoriteItems.findUnique({
+      where: { id: favoriteItemId },
+    });
+
+    if (!favoriteItem || favoriteItem.userId !== user.id) {
+      return NextResponse.json({ error: 'Favorite item not found or does not belong to the user' }, { status: 404 });
+    }
+
+    // Delete the favorite item
+    await prisma.favoriteItems.delete({
+      where: { id: favoriteItemId },
+    });
+
+    return NextResponse.json({ message: 'Favorite item deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting favorite item:', error);
     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
   }
 }
