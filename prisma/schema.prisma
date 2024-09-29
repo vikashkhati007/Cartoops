@@ -14,14 +14,15 @@ datasource db {
 }
 
 model User {
-  id           String      @id @default(auto()) @map("_id") @db.ObjectId // Use ObjectId native type
-  name         String      @unique
-  email        String      @unique
-  password     String
-  cartitems    CartItems[]
-  profileImage String      @default("") // Default empty string for profile image
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  id            String          @id @default(auto()) @map("_id") @db.ObjectId // Use ObjectId native type
+  name          String          @unique
+  email         String          @unique
+  password      String
+  cartitems     CartItems[]
+  favoriteitems FavoriteItems[] // Relation for favorite items
+  profileImage  String          @default("") // Default empty string for profile image
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
 }
 
 model CartItems {
@@ -37,3 +38,15 @@ model CartItems {
   User      User     @relation(fields: [userId], references: [id])
 }
 
+model FavoriteItems {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId   Int
+  title       String
+  price       Int
+  image       String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String
+  User        User     @relation(fields: [userId], references: [id]) // Relation to User
+}
