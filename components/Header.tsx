@@ -197,7 +197,7 @@ export default function Header() {
               Your Profile
             </Link>
             <Link
-              href="/orders"
+              href="/cart"
               className="block py-2 text-gray-700 hover:text-blue-600 font-medium"
             >
               Your Orders

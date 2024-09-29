@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { Search, ChevronDown, ShoppingCart, Heart } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 
 interface Product {
   id: number
@@ -27,6 +28,7 @@ export default function ProductPage() {
   const [error, setError] = useState('')
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
+  const session = useSession();
 
   const observer = useRef<IntersectionObserver | null>(null)
   const lastProductElementRef = useCallback((node: HTMLDivElement | null) => {
@@ -133,6 +135,31 @@ useEffect(() => {
     }
   })
 
+  const addCartItem = async (userId: any, productId:any, title:any, price:any, image:any) => {
+    const response = await fetch('/api/cart', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: userId,
+        productId: productId,
+        title: title,
+        price: price,
+        image: image,
+        quantity: 1,  // Default quantity
+      }),
+    });
+  
+    const data = await response.json();
+    if (response.ok) {
+      console.log('Cart item added successfully:', data);
+    } else {
+      console.error('Failed to add cart item:', data);
+    }
+  };
+  
+
   return (
     <div className="bg-gray-100 min-h-screen">
       <div className="container mx-auto px-4 py-8">
@@ -218,6 +245,8 @@ useEffect(() => {
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-bold text-blue-600">${product.price.toFixed(2)}</span>
                   <button 
+                  // @ts-ignore
+                  onClick={() => addCartItem(session.data?.user?.id, product.id, product.title, product.price, product.image)}
                     className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-300 flex items-center"
                     aria-label={`Add ${product.title} to cart`}
                   >

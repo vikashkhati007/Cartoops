@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { Trash2, Plus, Minus, CreditCard } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 
 interface CartItem {
   id: number
@@ -12,14 +13,25 @@ interface CartItem {
   quantity: number
 }
 
-const initialCartItems: CartItem[] = [
-  { id: 1, title: "Men's Classic T-Shirt", price: 29.99, image: "/placeholder.svg?height=200&width=200", quantity: 2 },
-  { id: 2, title: "Women's Summer Dress", price: 49.99, image: "/placeholder.svg?height=200&width=200", quantity: 1 },
-  { id: 3, title: "Unisex Hoodie", price: 39.99, image: "/placeholder.svg?height=200&width=200", quantity: 1 },
-]
 
 export default function ShoppingCartPage() {
-  const [cartItems, setCartItems] = useState<CartItem[]>(initialCartItems)
+  const session = useSession();
+
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  useEffect(()=>{
+    const fetchCartItems = async (userId:any) => {
+      const response = await fetch(`/api/cart?userId=${userId}`);
+      const data = await response.json();
+      if (response.ok) {
+        setCartItems(data);
+        console.log('User Cart Items:', data);
+      } else {
+        console.error('Error fetching cart items:', data);
+      }
+    };
+    //@ts-ignore
+    fetchCartItems(session.data?.user.id);
+  },[])
 
   const updateQuantity = (id: number, newQuantity: number) => {
     if (newQuantity < 1) return
