@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Search, ChevronDown, ShoppingCart, Heart } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { toast } from "@/hooks/use-toast";
+import Link from "next/link";
 
 interface Product {
   id: number;
@@ -58,7 +59,7 @@ export default function ProductPage() {
           throw new Error("Failed to fetch total products");
         }
         const allProducts = await response.json();
-        setTotalProducts(allProducts.length); // Set total number of products
+        setTotalProducts(allProducts.length);
       } catch (err) {
         setError("Failed to load total products count.");
       }
@@ -83,7 +84,6 @@ export default function ProductPage() {
         }
         const newProducts = await response.json();
 
-        // Compare loaded products with totalProducts to stop infinite scroll
         setProducts((prevProducts) => {
           const uniqueProducts = [...prevProducts, ...newProducts].reduce(
             (acc, current) => {
@@ -99,7 +99,6 @@ export default function ProductPage() {
           return uniqueProducts;
         });
 
-        // Stop loading if we've fetched all products
         if (
           totalProducts &&
           products.length + newProducts.length >= totalProducts
@@ -131,7 +130,7 @@ export default function ProductPage() {
     productimage: string
   ) => {
     const product = {
-      productId: productId, // Example product ID
+      productId: productId,
       title: producttitle,
       description: productdescription,
       image: productimage,
@@ -212,6 +211,104 @@ export default function ProductPage() {
     }
   };
 
+  const renderProductCards = () => {
+    if (loading && products.length === 0) {
+      return Array(8).fill(null).map((_, index) => (
+        <div 
+          key={`skeleton-${index}`}
+          className="bg-white rounded-lg shadow-md overflow-hidden"
+        >
+          <div className="relative pb-[100%] bg-gray-200 animate-pulse"></div>
+          <div className="p-4">
+            <div className="h-4 bg-gray-200 rounded w-3/4 mb-2 animate-pulse"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/2 mb-2 animate-pulse"></div>
+            <div className="flex justify-between items-center mt-4">
+              <div className="h-6 bg-gray-200 rounded w-1/4 animate-pulse"></div>
+              <div className="h-10 bg-gray-200 rounded w-1/3 animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+      ));
+    }
+
+    return sortedProducts.map((product, index) => (
+      <div
+        key={product.id}
+        className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105"
+        ref={
+          index === sortedProducts.length - 1
+            ? lastProductElementRef
+            : null
+        }
+      >
+        <div className="relative pb-[100%]">
+          <Image
+            src={product.image}
+            alt={product.title}
+            layout="fill"
+            objectFit="cover"
+            className="absolute top-0 left-0 w-full h-full object-contain p-4"
+          />
+          <button
+            onClick={() =>
+              toggleFavorite(
+                product.id,
+                product.title,
+                product.description,
+                product.price,
+                product.image
+              )
+            }
+            className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition duration-300"
+            aria-label={
+              favorites.includes(product.id)
+                ? "Remove from favorites"
+                : "Add to favorites"
+            }
+          >
+            <Heart
+              className={`h-5 w-5 ${
+                favorites.includes(product.id)
+                  ? "text-red-500 fill-current"
+                  : "text-gray-400"
+              }`}
+            />
+          </button>
+        </div>
+        <div className="p-4">
+          <h2 className="text-lg font-semibold mb-2 text-gray-800 truncate">
+            {product.title}
+          </h2>
+          <p className="text-sm text-gray-600 mb-2 truncate">
+            {product.category}
+          </p>
+          <div className="flex justify-between items-center">
+            <span className="text-lg font-bold text-blue-600">
+              ${product.price.toFixed(2)}
+            </span>
+            <button
+              onClick={() =>
+                addCartItem(
+                  // @ts-ignore
+                  session.data?.user?.id,
+                  product.id,
+                  product.title,
+                  product.price,
+                  product.image
+                )
+              }
+              className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-300 flex items-center"
+              aria-label={`Add ${product.title} to cart`}
+            >
+              <ShoppingCart className="h-5 w-5 mr-2" />
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    ));
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen">
       <div className="container mx-auto px-4 py-8">
@@ -267,88 +364,13 @@ export default function ProductPage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {sortedProducts.map((product, index) => (
-            <div
-              key={product.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105"
-              ref={
-                index === sortedProducts.length - 1
-                  ? lastProductElementRef
-                  : null
-              }
-            >
-              <div className="relative pb-[100%]">
-                <Image
-                  src={product.image}
-                  alt={product.title}
-                  layout="fill"
-                  objectFit="cover"
-                  className="absolute top-0 left-0 w-full h-full object-contain p-4"
-                />
-                <button
-                  onClick={() =>
-                    toggleFavorite(
-                      product.id,
-                      product.title,
-                      product.description,
-                      product.price,
-                      product.image
-                    )
-                  }
-                  className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition duration-300"
-                  aria-label={
-                    favorites.includes(product.id)
-                      ? "Remove from favorites"
-                      : "Add to favorites"
-                  }
-                >
-                  <Heart
-                    className={`h-5 w-5 ${
-                      favorites.includes(product.id)
-                        ? "text-red-500 fill-current"
-                        : "text-gray-400"
-                    }`}
-                  />
-                </button>
-              </div>
-              <div className="p-4">
-                <h2 className="text-lg font-semibold mb-2 text-gray-800 truncate">
-                  {product.title}
-                </h2>
-                <p className="text-sm text-gray-600 mb-2 truncate">
-                  {product.category}
-                </p>
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-bold text-blue-600">
-                    ${product.price.toFixed(2)}
-                  </span>
-                  <button
-                    // @ts-ignore
-                    onClick={() =>
-                      addCartItem(
-                        //@ts-ignore
-                        session.data?.user?.id,
-                        product.id,
-                        product.title,
-                        product.price,
-                        product.image
-                      )
-                    }
-                    className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-300 flex items-center"
-                    aria-label={`Add ${product.title} to cart`}
-                  >
-                    <ShoppingCart className="h-5 w-5 mr-2" />
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+          {renderProductCards()}
         </div>
-        {loading && (
+        {loading && products.length > 0 && (
           <p className="text-center mt-4">Loading more products...</p>
         )}
         {error && <p className="text-center mt-4 text-red-500">{error}</p>}
+        {!hasMore && <p className="text-center mt-4">No more products to load</p>}
       </div>
     </div>
   );
