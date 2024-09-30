@@ -31,7 +31,7 @@ export async function GET(req: Request) {
 export async function POST(req: any) {
   try {
     const body = await req.json();
-    const { userId, productId, title, price, image, quantity } = body;
+    const { userId, productId, title, price, image } = body;
 
     // Add new cart item to the user
     const newCartItem = await prisma.cartItems.create({
@@ -40,7 +40,6 @@ export async function POST(req: any) {
         title: title,
         price: price,
         image: image,
-        quantity: quantity,
         // Use 'User' (uppercase 'U') to connect the user
         User: {
           connect: { id: userId }, // This references the existing user

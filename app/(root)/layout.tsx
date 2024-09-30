@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Providers from "@/Provider";
 import { getSession } from "@/db/auth";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default async function RootLayout({
         <body className={inter.className}>
           <Header />
           {children}
+          <Toaster />
           <Footer />
         </body>
       </ProgressBarProvider>

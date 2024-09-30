@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Heart, ShoppingCart, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { toast } from "@/hooks/use-toast";
 
 interface FavoriteProduct {
   id: number;
@@ -39,6 +40,10 @@ export default function FavoriteProductsPage() {
     });
 
     if (res.ok) {
+      toast({
+        title: "Favorite removed",
+        description: "The product has been removed from your favorites.",
+      });
       setFavorites((prevFavorites) =>
         prevFavorites.filter((item) => item.id !== id)
       );
@@ -62,9 +67,11 @@ export default function FavoriteProductsPage() {
       }),
     });
 
-    const data = await response.json();
     if (response.ok) {
-    console.log("Added to cart:", data);
+      toast({
+        title: "Added to cart",
+        description: "The product has been added to your cart.",
+      });
     }
   };
 

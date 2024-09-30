@@ -4,6 +4,7 @@ import "@/app/globals.css";
 import Providers from "@/Provider";
 import { getSession } from "@/db/auth";
 const inter = Inter({ subsets: ["latin"] });
+import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
   title: "Cartoops is a ecommerce platform for buying and selling products",
@@ -22,6 +23,7 @@ export default async function RootLayout({
         <body className={inter.className}>
           <Providers session={session}>
           {children}
+          <Toaster />
           </Providers>
           </body>
     </html>

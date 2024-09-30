@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Eye, EyeOff, User, Mail, Lock } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
+import { toast } from "@/hooks/use-toast";
 
 export default function AuthForms() {
   const [isLogin, setIsLogin] = useState(true);
@@ -77,6 +78,10 @@ export default function AuthForms() {
           body: JSON.stringify(formData),
         });
         if (res.ok) {
+          toast({
+            title: " Account created successfully",
+            description: "You can now sign in to your account",
+          })
           setIsLogin(true);
           setFormData({
             email: "",
@@ -84,13 +89,28 @@ export default function AuthForms() {
             name: "",
           });
         }
+        else{
+          toast({
+            title: "Account creation failed",
+          });
+        }
       } else {
         const res = await signIn("credentials", {
           ...formData,
           redirect: false,
         });
-        if (res) {
+        if (res?.ok) {
           setFormData({ name: "", email: "", password: "" });
+          toast({
+            title: "Sign in successful",
+            description: "You are redirecting...",
+          });
+        }
+        else{
+          toast({
+            title: "Sign in failed",
+            description: "Invalid credentials",
+          });
         }
       }
     }

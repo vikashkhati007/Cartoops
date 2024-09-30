@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Search, ChevronDown, ShoppingCart, Heart } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { toast } from "@/hooks/use-toast";
 
 interface Product {
   id: number;
@@ -147,12 +148,19 @@ export default function ProductPage() {
 
     if (res.ok) {
       const data = await res.json();
-      console.log("Favorite item added:", data);
+      toast({
+        title: "Favorite item added",
+      })
       setFavorites((prevFavorites) =>
         prevFavorites.includes(productId)
           ? prevFavorites.filter((id) => id !== productId)
           : [...prevFavorites, productId]
       );
+    }
+    else{
+      toast({
+        title: "Failed to add favorite item",
+      });
     }
   };
 
@@ -193,15 +201,14 @@ export default function ProductPage() {
         title: title,
         price: price,
         image: image,
-        quantity: 1, // Default quantity
       }),
     });
 
     const data = await response.json();
     if (response.ok) {
-      console.log("Cart item added successfully:", data);
+      toast({ title: `Item added to cart`});
     } else {
-      console.error("Failed to add cart item:", data);
+      toast({ title: `Failed to add item to cart`});
     }
   };
 

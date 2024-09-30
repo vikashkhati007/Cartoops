@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import { User, Mail, Lock, Camera, Eye, EyeOff, Plus } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { toast } from "@/hooks/use-toast";
 
 export default function ProfilePage() {
   const session = useSession();
@@ -44,9 +45,16 @@ export default function ProfilePage() {
 
     const data = await response.json();
     if (response.ok) {
+      toast({
+        title: "Profile updated",
+        description: "Your profile has been updated successfully.",
+      });
       session.update();
     } else {
-      console.error("Error updating profile:", data);
+      toast({
+        title: "Error updating profile",
+        description: data.error || "An error occurred while updating your profile.",
+      });
     }
     // setPassword("");
     // setShowPasswordField(false);

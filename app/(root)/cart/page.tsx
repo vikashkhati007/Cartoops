@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Trash2, Plus, Minus, CreditCard } from "lucide-react";
