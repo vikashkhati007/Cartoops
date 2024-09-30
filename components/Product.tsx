@@ -366,11 +366,7 @@ export default function ProductPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {renderProductCards()}
         </div>
-        {loading && products.length > 0 && (
-          <p className="text-center mt-4">Loading more products...</p>
-        )}
         {error && <p className="text-center mt-4 text-red-500">{error}</p>}
-        {!hasMore && <p className="text-center mt-4">No more products to load</p>}
       </div>
     </div>
   );
