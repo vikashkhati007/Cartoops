@@ -122,13 +122,7 @@ export default function Header() {
                     >
                       Your Orders
                     </Link>
-                    <Link
-                      href="/settings"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150"
-                      role="menuitem"
-                    >
-                      Settings
-                    </Link>
+                  
                     {session.data?.user ? (
                       <button
                       onClick={() => signOut()}
@@ -202,13 +196,6 @@ export default function Header() {
             >
               Your Orders
             </Link>
-            <Link
-              href="/settings"
-              className="block py-2 text-gray-700 hover:text-blue-600 font-medium"
-            >
-              Settings
-            </Link>
-
             {session.data?.user ? (
               <button
               onClick={() => signOut()}
