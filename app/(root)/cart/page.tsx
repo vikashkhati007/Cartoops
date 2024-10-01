@@ -42,7 +42,7 @@ export default function ShoppingCartPage() {
     };
     //@ts-ignore
     if (session.data?.user?.id) {
-    //@ts-ignore
+      //@ts-ignore
       fetchCartItems(session.data.user.id);
     }
     //@ts-ignore
@@ -52,16 +52,16 @@ export default function ShoppingCartPage() {
     if (newQuantity < 1) return;
     try {
       const response = await fetch(`/api/cart`, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           cartItemId: id,
           quantity: newQuantity,
         }),
       });
-  
+
       const data = await response.json();
       if (response.ok) {
         setCartItems((prevItems) =>
@@ -73,7 +73,7 @@ export default function ShoppingCartPage() {
         throw new Error(data.message || "Error updating cart item quantity");
       }
     } catch (error) {
-      console.error('Error updating cart item quantity:', error);
+      console.error("Error updating cart item quantity:", error);
       toast({
         title: "Error",
         description: "Failed to update item quantity. Please try again.",
@@ -243,9 +243,7 @@ export default function ShoppingCartPage() {
             </div>
             <hr className="my-4" />
             <div className="flex justify-between mb-4">
-              <span className="text-lg font-semibold text-gray-800">
-                Total
-              </span>
+              <span className="text-lg font-semibold text-gray-800">Total</span>
               <span className="text-lg font-semibold text-gray-800">
                 ${calculateTotal().toFixed(2)}
               </span>
