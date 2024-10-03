@@ -35,8 +35,8 @@ This is a full-fledged e-commerce website built using **Next.js**, **Prisma**, *
    ```
    DATABASE_URL=<Your MongoDB URL>
    NEXTAUTH_SECRET=<Your NextAuth Secret>
+   NEXT_PUBLIC_STRIPE_PUBLIC_KEY==<Your Stripe Publishable Key>
    STRIPE_SECRET_KEY=<Your Stripe Secret Key>
-   STRIPE_PUBLISHABLE_KEY=<Your Stripe Publishable Key>
    ```
 
 4. Run Prisma migrations to set up the database:
