@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Trash2, Plus, Minus, CreditCard } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { toast } from "@/hooks/use-toast";
+import Link from "next/link";
 
 interface CartItem {
   id: number;
@@ -248,10 +249,10 @@ export default function ShoppingCartPage() {
                 ${calculateTotal().toFixed(2)}
               </span>
             </div>
-            <button className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-300 flex items-center justify-center">
+            <Link href={`/checkout?amount=${calculateTotal().toFixed(2)}`} className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-300 flex items-center justify-center">
               <CreditCard className="h-5 w-5 mr-2" />
               Proceed to Checkout
-            </button>
+            </Link>
           </div>
         </div>
       </div>
