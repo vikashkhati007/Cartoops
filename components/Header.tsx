@@ -115,7 +115,7 @@ export default function Header() {
                       Your Profile
                     </Link>
                     <Link
-                      href="/cart"
+                      href="/orders"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150"
                       role="menuitem"
                     >

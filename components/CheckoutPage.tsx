@@ -8,7 +8,7 @@ import {
 } from "@stripe/react-stripe-js";
 import convertToSubcurrency from "@/lib/convertToSubcurrency";
 
-const CheckoutPage = ({ amount }: { amount: number }) => {
+const CheckoutPage = ({ amount, cartItems }: { amount: number, cartItems: any[] }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -43,23 +43,20 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
       return;
     }
 
-    const { error } = await stripe.confirmPayment({
+    const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       clientSecret,
+      redirect: 'if_required',
       confirmParams: {
-        return_url: `${
-          window.location.protocol + "//" + window.location.host
-        }/payment-success?amount=${amount}`,
+        return_url: `${window.location.protocol + "//" + window.location.host}/payment-success?amount=${amount}&items=${encodeURIComponent(JSON.stringify(cartItems))}`,
       },
     });
 
     if (error) {
-      // This point is only reached if there's an immediate error when
-      // confirming the payment. Show the error to your customer (for example, payment details incomplete)
       setErrorMessage(error.message);
-    } else {
-      // The payment UI automatically closes with a success animation.
-      // Your customer is redirected to your `return_url`.
+    } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+      // Redirect to success page with cart items
+      window.location.href = `${window.location.protocol + "//" + window.location.host}/payment-success?amount=${amount}&items=${encodeURIComponent(JSON.stringify(cartItems))}`;
     }
 
     setLoading(false);

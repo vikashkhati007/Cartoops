@@ -2,7 +2,8 @@
 
 import { useState, useRef } from 'react'
 import Image from 'next/image'
-import { User, Mail, Lock, Camera, Eye, EyeOff, Plus } from 'lucide-react'
+import { User, Mail, Lock, Camera, Eye, EyeOff, Plus, Package } from 'lucide-react'
+import Link from 'next/link'
 
 export default function ProfilePage() {
   const [name, setName] = useState('John Doe')
@@ -63,6 +64,15 @@ export default function ProfilePage() {
               />
               <h2 className="text-2xl font-bold text-white mt-4">{name}</h2>
               <p className="text-blue-200 mt-1">{email}</p>
+              
+              {/* Track Order Link */}
+              <Link 
+                href="/orders"
+                className="mt-4 flex items-center px-4 py-2 bg-white text-blue-600 rounded-full hover:bg-blue-50 transition-colors duration-300 shadow-md"
+              >
+                <Package className="h-5 w-5 mr-2" />
+                Track Orders
+              </Link>
             </div>
             <div className="p-8 md:flex-grow">
               <h1 className="text-3xl font-bold text-gray-900 mb-6">Edit Your Profile</h1>
