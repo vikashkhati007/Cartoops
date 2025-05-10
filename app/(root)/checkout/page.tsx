@@ -16,7 +16,11 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 const Page = () => {
   const searchParams = useSearchParams();
   const amount = parseFloat(searchParams.get('amount')!);
-  
+
+  // Decode cartItems from query param (assuming it's a JSON string)
+  const rawCartItems = searchParams.get('cartItems');
+  const cartItems = rawCartItems ? JSON.parse(decodeURIComponent(rawCartItems)) : [];
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -51,7 +55,7 @@ const Page = () => {
                 },
               }}
             >
-              <CheckoutPage amount={amount} />
+              <CheckoutPage amount={amount} cartItems={cartItems} />
             </Elements>
           </div>
         </div>
