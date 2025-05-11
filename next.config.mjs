@@ -10,7 +10,9 @@ const nextConfig = {
         protocol: "https",
         hostname: "fakestoreapi.com",
       },
+      // Add more domains if needed for other images
     ],
+    unoptimized: true, // Add this for static exports
   },
 }
 
