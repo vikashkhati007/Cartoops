@@ -1,6 +1,7 @@
 import EcommerceFeatures from "@/components/EcommerceFeatures";
 import FeaturedCategories from "@/components/FeaturedCategories";
 import Hero from "@/components/Hero";
+import ProductChatbot from "@/components/ProductChatbot";
 import TrendingProductsHero from "@/components/Trendingproducts";
 
 export default function HomePage() {
@@ -19,6 +20,7 @@ export default function HomePage() {
         <FeaturedCategories />
         <EcommerceFeatures />
       </div>
+      <ProductChatbot />
     </div>
   )
 }
