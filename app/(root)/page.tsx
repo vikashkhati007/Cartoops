@@ -1,7 +1,7 @@
+import CustomerReviews from "@/components/CustomerReviews";
 import EcommerceFeatures from "@/components/EcommerceFeatures";
 import FeaturedCategories from "@/components/FeaturedCategories";
 import Hero from "@/components/Hero";
-import ProductChatbot from "@/components/ProductChatbot";
 import TrendingProductsHero from "@/components/Trendingproducts";
 
 export default function HomePage() {
@@ -18,6 +18,7 @@ export default function HomePage() {
         </div>
         <TrendingProductsHero/>
         <FeaturedCategories />
+        <CustomerReviews />  {/* Add this line */}
         <EcommerceFeatures />
       </div>
     </div>
