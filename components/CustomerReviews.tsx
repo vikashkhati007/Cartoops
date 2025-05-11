@@ -64,7 +64,7 @@ export default function CustomerReviews() {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">What Our Customers Say</h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Don't just take our word for it - hear from our satisfied customers about their shopping experience
+            Don&apos;t just take our word for it - hear from our satisfied customers about their shopping experience
           </p>
         </div>
 
