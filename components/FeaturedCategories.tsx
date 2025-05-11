@@ -19,25 +19,20 @@ export default function FeaturedCategories() {
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
           {categories.map((category) => (
-            <div 
+            <Link 
+              href="#"
               key={category.name} 
               className="relative overflow-hidden group bg-white rounded-xl sm:rounded-2xl transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1"
             >
-              <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-40`}></div>
+              <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-40 group-hover:opacity-60 transition-opacity duration-300`}></div>
               <div className="relative p-6 sm:p-8">
                 <div className={`inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl ${category.color} mb-4 sm:mb-6 transition-transform duration-300 group-hover:scale-110`}>
                   <category.icon className="h-6 w-6 sm:h-8 sm:w-8" />
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">{category.name}</h3>
-                <p className="text-base sm:text-lg text-gray-600 mb-4 sm:mb-6">{category.discount}</p>
-                <Link
-                  href="#"
-                  className="inline-flex items-center justify-center px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base font-medium rounded-lg sm:rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-300 shadow-sm hover:shadow-md w-full"
-                >
-                  Explore Now
-                </Link>
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-indigo-600 transition-colors duration-300">{category.name}</h3>
+                <p className="text-base sm:text-lg text-gray-600 group-hover:text-gray-700 transition-colors duration-300">{category.discount}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

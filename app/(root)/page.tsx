@@ -20,7 +20,6 @@ export default function HomePage() {
         <FeaturedCategories />
         <EcommerceFeatures />
       </div>
-      <ProductChatbot />
     </div>
   )
 }

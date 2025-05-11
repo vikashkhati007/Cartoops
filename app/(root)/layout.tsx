@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import Providers from "@/Provider";
 import { getSession } from "@/db/auth";
 import { Toaster } from "@/components/ui/toaster";
+import ProductChatbot from "@/components/ProductChatbot";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,6 +32,7 @@ export default async function RootLayout({
           {children}
           <Toaster />
           <Footer />
+      <ProductChatbot />
         </body>
       </ProgressBarProvider>
       </Providers>
