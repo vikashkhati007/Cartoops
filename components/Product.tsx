@@ -183,11 +183,11 @@ export default function ProductPage() {
   });
 
   const addCartItem = async (
-    userId: any,
-    productId: any,
-    title: any,
-    price: any,
-    image: any
+    userId: string,
+    productId: number,
+    title: string,
+    price: number,
+    image: string
   ) => {
     const response = await fetch("/api/cart", {
       method: "POST",
@@ -198,7 +198,7 @@ export default function ProductPage() {
         userId: userId,
         productId: productId,
         title: title,
-        price: price,
+        price: Math.round(price), // Convert to integer
         image: image,
       }),
     });
@@ -231,82 +231,70 @@ export default function ProductPage() {
       ));
     }
 
-    return sortedProducts.map((product, index) => (
-      <div
-        key={product.id}
-        className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:scale-105"
-        ref={
-          index === sortedProducts.length - 1
-            ? lastProductElementRef
-            : null
-        }
-      >
-        <div className="relative pb-[100%]">
-          <Image
-            src={product.image}
-            alt={product.title}
-            layout="fill"
-            objectFit="cover"
-            className="absolute top-0 left-0 w-full h-full object-contain p-4"
-          />
-          <button
-            onClick={() =>
-              toggleFavorite(
-                product.id,
-                product.title,
-                product.description,
-                product.price,
-                product.image
-              )
-            }
-            className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition duration-300"
-            aria-label={
-              favorites.includes(product.id)
-                ? "Remove from favorites"
-                : "Add to favorites"
-            }
-          >
-            <Heart
-              className={`h-5 w-5 ${
-                favorites.includes(product.id)
-                  ? "text-red-500 fill-current"
-                  : "text-gray-400"
-              }`}
-            />
-          </button>
-        </div>
-        <div className="p-4">
-          <h2 className="text-lg font-semibold mb-2 text-gray-800 truncate">
-            {product.title}
-          </h2>
-          <p className="text-sm text-gray-600 mb-2 truncate">
-            {product.category}
-          </p>
-          <div className="flex justify-between items-center">
-            <span className="text-lg font-bold text-blue-600">
-              ${product.price.toFixed(2)}
-            </span>
-            <button
-              onClick={() =>
-                addCartItem(
-                  // @ts-ignore
-                  session.data?.user?.id,
-                  product.id,
-                  product.title,
-                  product.price,
-                  product.image
-                )
-              }
-              className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors duration-300 flex items-center"
-              aria-label={`Add ${product.title} to cart`}
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {sortedProducts.map((product, index) => {
+          const isLastElement = index === sortedProducts.length - 1;
+          return (
+            <div
+              key={product.id}
+              ref={isLastElement ? lastProductElementRef : null}
+              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden group"
             >
-              <ShoppingCart className="h-5 w-5 mr-2" />
-              Add to Cart
-            </button>
-          </div>
-        </div>
+              {/* Product Image */}
+              <div className="relative h-64 w-full overflow-hidden bg-white">
+                <Image
+                  src={product.image}
+                  alt={product.title}
+                  fill
+                  className="object-contain group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+
+              {/* Product Details */}
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                  {product.title}
+                </h3>
+                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                  {product.description}
+                </p>
+                
+                {/* Price and Actions */}
+                <div className="flex items-center justify-between">
+                  <span className="text-2xl font-bold text-blue-600">
+                    ${product.price.toFixed(2)}
+                  </span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => toggleFavorite(product.id, product.title, product.description, product.price, product.image)}
+                      className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
+                    >
+                      <Heart
+                        className={`h-6 w-6 ${favorites.includes(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-400'}`}
+                      />
+                    </button>
+                    <button
+                      onClick={() => addCartItem(
+                        // @ts-ignore
+                        session.data?.user?.id,
+                        product.id,
+                        product.title,
+                        product.price,
+                        product.image
+                      )}
+                      className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
+                    >
+                      <ShoppingCart className="h-6 w-6 text-gray-400" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
-    ));
+    );
   };
 
   return (
@@ -362,61 +350,7 @@ export default function ProductPage() {
         {error ? (
           <div className="text-center text-red-500 py-8">{error}</div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {sortedProducts.map((product, index) => {
-              const isLastElement = index === sortedProducts.length - 1;
-              return (
-                <div
-                  key={product.id}
-                  ref={isLastElement ? lastProductElementRef : null}
-                  className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden group"
-                >
-                  {/* Product Image */}
-                  <div className="relative h-64 w-full overflow-hidden bg-white">
-                    <Image
-                      src={product.image}
-                      alt={product.title}
-                      fill
-                      className="object-contain group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-
-                  {/* Product Details */}
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                      {product.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                      {product.description}
-                    </p>
-                    
-                    {/* Price and Actions */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-blue-600">
-                        ${product.price.toFixed(2)}
-                      </span>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => toggleFavorite(product.id, product.title, product.description, product.price, product.image)}
-                          className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
-                        >
-                          <Heart
-                            className={`h-6 w-6 ${favorites.includes(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-400'}`}
-                          />
-                        </button>
-                        <button
-                          onClick={() => addCartItem(session?.data?.user?.email, product.id, product.title, product.price, product.image)}
-                          className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
-                        >
-                          <ShoppingCart className="h-6 w-6 text-gray-400" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          renderProductCards()
         )}
 
         {/* Loading State */}

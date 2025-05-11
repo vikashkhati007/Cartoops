@@ -72,50 +72,55 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center space-x-3 sm:space-x-6">
-            <Link href="/cart" className="text-gray-700 hover:text-blue-600">
-              <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6" />
-            </Link>
-            <Link href="/favorite" className="text-gray-700 hover:text-blue-600">
-              <Heart className="h-5 w-5 sm:h-6 sm:w-6" />
-            </Link>
-            <div className="relative">
-              <button
-                onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="text-gray-700 hover:text-blue-600 focus:outline-none"
-              >
-                {session.data?.user ? (
-                  <span className="text-sm sm:text-base">{session.data.user.name}</span>
-                ) : (
-                  <User className="h-5 w-5 sm:h-6 sm:w-6" />
-                )}
-              </button>
-              {isProfileOpen && (
-                <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-                  <div className="py-1">
-                    <Link
-                      href="/profile"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150"
-                    >
-                      Your Profile
-                    </Link>
-                    <Link
-                      href="/orders"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150"
-                    >
-                      Your Orders
-                    </Link>
-                    {session.data?.user && (
-                      <button
-                        onClick={() => signOut()}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150"
-                      >
-                        Sign Out
-                      </button>
-                    )}
-                  </div>
+            {session.data?.user ? (
+              <>
+                <Link href="/cart" className="text-gray-700 hover:text-blue-600">
+                  <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6" />
+                </Link>
+                <Link href="/favorite" className="text-gray-700 hover:text-blue-600">
+                  <Heart className="h-5 w-5 sm:h-6 sm:w-6" />
+                </Link>
+                <div className="relative">
+                  <button
+                    onClick={() => setIsProfileOpen(!isProfileOpen)}
+                    className="text-gray-700 hover:text-blue-600 focus:outline-none"
+                  >
+                    <span className="text-sm sm:text-base">{session.data.user.name}</span>
+                  </button>
+                  {isProfileOpen && (
+                    <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+                      <div className="py-1">
+                        <Link
+                          href="/profile"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150"
+                        >
+                          Your Profile
+                        </Link>
+                        <Link
+                          href="/orders"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150"
+                        >
+                          Your Orders
+                        </Link>
+                        <button
+                          onClick={() => signOut()}
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors duration-150"
+                        >
+                          Sign Out
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              </>
+            ) : (
+              <Link
+                href="/auth"
+                className="text-sm sm:text-base text-gray-700 hover:text-blue-600 font-medium"
+              >
+                Sign In
+              </Link>
+            )}
             <button
               className="md:hidden text-gray-700 hover:text-blue-600"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -176,17 +181,38 @@ export default function Header() {
             >
               Your Orders
             </Link>
-            {session.data?.user && (
-              <button
-                onClick={() => signOut()}
-                className="block w-full text-left py-2 text-sm text-gray-700 hover:text-blue-600 font-medium"
+            {session.data?.user ? (
+              <>
+                <Link
+                  href="/profile"
+                  className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium"
+                >
+                  Your Profile
+                </Link>
+                <Link
+                  href="/orders"
+                  className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium"
+                >
+                  Your Orders
+                </Link>
+                <button
+                  onClick={() => signOut()}
+                  className="block w-full text-left py-2 text-sm text-gray-700 hover:text-blue-600 font-medium"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/auth"
+                className="block py-2 text-sm text-gray-700 hover:text-blue-600 font-medium"
               >
-                Sign Out
-              </button>
+                Sign In
+              </Link>
             )}
           </div>
         )}
       </div>
     </header>
-  )
+  );
 }

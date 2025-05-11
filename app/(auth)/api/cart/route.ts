@@ -40,10 +40,7 @@ export async function POST(req: any) {
         title: title,
         price: price,
         image: image,
-        // Use 'User' (uppercase 'U') to connect the user
-        User: {
-          connect: { id: userId }, // This references the existing user
-        },
+        userId: userId, // Directly set the userId field
       },
     });
 

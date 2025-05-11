@@ -7,7 +7,7 @@ import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
 
 interface CartItem {
-  id: number;
+  id: string;  // Change to string since MongoDB uses string IDs
   title: string;
   price: number;
   image: string;
@@ -49,7 +49,7 @@ export default function ShoppingCartPage() {
     //@ts-ignore
   }, [session.data?.user?.id]);
 
-  const updateQuantity = async (id: number, newQuantity: number) => {
+  const updateQuantity = async (id: string, newQuantity: number) => {
     if (newQuantity < 1) return;
     try {
       const response = await fetch(`/api/cart`, {
@@ -83,7 +83,7 @@ export default function ShoppingCartPage() {
     }
   };
 
-  const removeItem = async (id: number) => {
+  const removeItem = async (id: string) => {
     try {
       const response = await fetch(`/api/cart?cartItemId=${id}`, {
         method: "DELETE",
