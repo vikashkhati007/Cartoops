@@ -9,6 +9,7 @@ This is a full-fledged e-commerce website built using **Next.js**, **Prisma**, *
 - **Shopping Cart**: Users can add products to the cart and manage quantities.
 - **Checkout and Payments**: Integrated with **Stripe** for seamless payment processing.
 - **Responsive Design**: Optimized for mobile and desktop views.
+- - **ChatBot**: Chatbot which is user friendly to Gives Details about the product by query
 
 ## Technologies Used
 
